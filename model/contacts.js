@@ -2,7 +2,6 @@ const fs = require('fs/promises');
 const db = require('./db');
 const path = require('path');
 const { v4: uuid } = require('uuid');
-// const contacts = require('./contacts.json');
 
 const contactsPath = path.join(__dirname, 'contacts.json');
 
@@ -55,7 +54,7 @@ const updateContact = async (contactId, body) => {
   const newContact = { ...contact, ...body };
 
   const newListContacts = contacts.map((obj) =>
-    String(obj.id) === contactId ? newContact : obj
+    obj.id === contactId ? newContact : obj
   );
 
   await fs.writeFile(
@@ -74,10 +73,3 @@ module.exports = {
   addContact,
   updateContact,
 };
-
-// {
-//     "id": "9486ae96-f832-457d-8ec1-74b583a21ed5",
-//     "name": "Allen Raymonda",
-//     "email": "nulla.antea@vestibul.co.uk",
-//     "phone": "(992) 914-3792"
-//   }
