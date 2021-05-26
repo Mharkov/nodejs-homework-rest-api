@@ -1,13 +1,6 @@
-const express = require('express');
-const router = express.Router();
-const Contacts = require('../../model/contacts');
-const {
-  createContact,
-  updateContact,
-  favoriteContact,
-} = require('./validatio');
+const Contacts = require('../model/contacts');
 
-router.get('/', async (req, res, next) => {
+const getAll = async (req, res, next) => {
   try {
     const contacts = await Contacts.listContacts();
     return res.json({
@@ -20,9 +13,9 @@ router.get('/', async (req, res, next) => {
   } catch (error) {
     next(error);
   }
-});
+};
 
-router.get('/:contactId', async (req, res, next) => {
+const getById = async (req, res, next) => {
   try {
     const contact = await Contacts.getContactById(req.params.contactId);
     if (contact) {
@@ -42,9 +35,9 @@ router.get('/:contactId', async (req, res, next) => {
   } catch (error) {
     next(error);
   }
-});
+};
 
-router.post('/', createContact, async (req, res, next) => {
+const create = async (req, res, next) => {
   try {
     const contacts = await Contacts.addContact(req.body);
     if (contacts) {
@@ -64,9 +57,9 @@ router.post('/', createContact, async (req, res, next) => {
   } catch (error) {
     next(error);
   }
-});
+};
 
-router.delete('/:contactId', async (req, res, next) => {
+const remove = async (req, res, next) => {
   try {
     const contact = await Contacts.removeContact(req.params.contactId);
     if (contact) {
@@ -87,9 +80,9 @@ router.delete('/:contactId', async (req, res, next) => {
   } catch (error) {
     next(error);
   }
-});
+};
 
-router.put('/:contactId', updateContact, async (req, res, next) => {
+const update = async (req, res, next) => {
   try {
     if (Object.keys(req.body).length === 0) {
       return res.status(400).json({
@@ -119,42 +112,48 @@ router.put('/:contactId', updateContact, async (req, res, next) => {
   } catch (error) {
     next(error);
   }
-});
+};
 
-router.patch(
-  '/:contactId/favorite',
-  favoriteContact,
-  async (req, res, next) => {
-    try {
-      if (Object.keys(req.body).length === 0) {
-        return res.status(400).json({
-          code: 400,
-          message: 'missing field favorite',
-        });
-      }
+module.exports = {
+  getAll,
+  getById,
+  create,
+  remove,
+  update,
+};
 
-      const contact = await Contacts.updateStatusContact(
-        req.params.contactId,
-        req.body
-      );
-      if (contact) {
-        return res.json({
-          status: 'success',
-          code: 200,
-          data: {
-            contact,
-          },
-        });
-      }
-      return res.status(404).json({
-        status: 'error',
-        code: 404,
-        message: 'Not found',
-      });
-    } catch (error) {
-      next(error);
-    }
-  }
-);
+//router.patch(
+//   '/:contactId/favorite',
+//   favoriteContact,
+//   async (req, res, next) => {
+//     try {
+//       if (Object.keys(req.body).length === 0) {
+//         return res.status(400).json({
+//           code: 400,
+//           message: 'missing field favorite',
+//         });
+//       }
 
-module.exports = router;
+//       const contact = await Contacts.updateStatusContact(
+//         req.params.contactId,
+//         req.body
+//       );
+//       if (contact) {
+//         return res.json({
+//           status: 'success',
+//           code: 200,
+//           data: {
+//             contact,
+//           },
+//         });
+//       }
+//       return res.status(404).json({
+//         status: 'error',
+//         code: 404,
+//         message: 'Not found',
+//       });
+//     } catch (error) {
+//       next(error);
+//     }
+//   }
+// );
