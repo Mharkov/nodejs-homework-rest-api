@@ -2,13 +2,15 @@ const Contacts = require('../model/contacts');
 
 const getAll = async (req, res, next) => {
   try {
-    const contacts = await Contacts.listContacts();
+    const userID = req.user.id;
+    const { contacts, total, limit, page } = await Contacts.listContacts(
+      userID,
+      req.query
+    );
     return res.json({
       status: 'success',
       code: 200,
-      data: {
-        contacts,
-      },
+      data: { total, limit, page, contacts },
     });
   } catch (error) {
     next(error);
@@ -17,7 +19,11 @@ const getAll = async (req, res, next) => {
 
 const getById = async (req, res, next) => {
   try {
-    const contact = await Contacts.getContactById(req.params.contactId);
+    const userID = req.user.id;
+    const contact = await await Contacts.getContactById(
+      userID,
+      req.params.contactId
+    );
     if (contact) {
       return res.json({
         status: 'success',
@@ -39,7 +45,8 @@ const getById = async (req, res, next) => {
 
 const create = async (req, res, next) => {
   try {
-    const contacts = await Contacts.addContact(req.body);
+    const userID = req.user.id;
+    const contacts = await Contacts.addContact({ ...req.body, owner: userID });
     if (contacts) {
       return res.status(201).json({
         status: 'success',
@@ -61,7 +68,8 @@ const create = async (req, res, next) => {
 
 const remove = async (req, res, next) => {
   try {
-    const contact = await Contacts.removeContact(req.params.contactId);
+    const userID = req.user.id;
+    const contact = await Contacts.removeContact(userID, req.params.contactId);
     if (contact) {
       return res.json({
         status: 'success',
@@ -84,6 +92,7 @@ const remove = async (req, res, next) => {
 
 const update = async (req, res, next) => {
   try {
+    const userID = req.user.id;
     if (Object.keys(req.body).length === 0) {
       return res.status(400).json({
         code: 400,
@@ -92,6 +101,7 @@ const update = async (req, res, next) => {
     }
 
     const contact = await Contacts.updateContact(
+      userID,
       req.params.contactId,
       req.body
     );

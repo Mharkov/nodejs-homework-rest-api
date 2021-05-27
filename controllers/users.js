@@ -62,8 +62,17 @@ const login = async (req, res, next) => {
   }
 };
 
-const logout = async (req, res, next) => {};
-
+const logout = async (req, res, next) => {
+  try {
+    await Users.updateToken(req.user.id);
+    return res.status(HttpCode.NO_CONTENT).json({
+      status: 'success',
+      code: HttpCode.NO_CONTENT,
+    });
+  } catch (e) {
+    next(e);
+  }
+};
 const current = async (req, res, next) => {};
 
 module.exports = {
