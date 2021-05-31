@@ -6,7 +6,7 @@ const listContacts = async (userID, query) => {
     offset = 0,
     page = 1,
     sortBy,
-    sortByDec,
+    sortByDesc,
     filter, // name | age| favorite
     favorite = null,
   } = query;

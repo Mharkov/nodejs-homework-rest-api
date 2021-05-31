@@ -1,5 +1,6 @@
 const jwt = require('jsonwebtoken');
 require('dotenv').config();
+
 const Users = require('../model/users');
 const { HttpCode } = require('../helpers/constans');
 const JWT_SECRET_KEY = process.env.JWT_SECRET_KEY;
@@ -73,11 +74,56 @@ const logout = async (req, res, next) => {
     next(e);
   }
 };
-const current = async (req, res, next) => {};
+const current = async (req, res, next) => {
+  try {
+    const email = req.user.email;
+    const subscription = req.user.subscription;
+
+    if (!req.user) {
+      return res.status(HttpCode.UNAUTHORIZED).json({
+        status: 'error',
+        code: HttpCode.UNAUTHORIZED,
+        data: 'Unauthorized',
+        message: 'Not authorized',
+      });
+    }
+
+    return res.status(HttpCode.OK).json({
+      status: 'success',
+      code: HttpCode.OK,
+      data: {
+        email,
+        subscription,
+      },
+    });
+  } catch (e) {
+    next(e);
+  }
+};
+const update = async (req, res, next) => {
+  const userId = req.user.id;
+  try {
+    await Users.updateSuscription(userId, req.body.subscription);
+    const user = await Users.findById(userId);
+    return res.json({
+      status: 'success',
+      code: HttpCode.OK,
+      data: {
+        user: {
+          email: user.email,
+          subscription: user.subscription,
+        },
+      },
+    });
+  } catch (error) {
+    next(error);
+  }
+};
 
 module.exports = {
   signup,
   login,
   logout,
   current,
+  update,
 };
