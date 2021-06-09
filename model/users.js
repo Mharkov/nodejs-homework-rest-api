@@ -21,8 +21,8 @@ const updateSuscription = async (id, subscription) => {
   return await User.updateOne({ _id: id }, { subscription });
 };
 
-const updateAvatar = async (id, avatar) => {
-  return await User.updateOne({ _id: id }, { avatar });
+const updateAvatar = async (id, avatar, userIdImg = null) => {
+  return await User.updateOne({ _id: id }, { avatar, userIdImg });
 };
 
 module.exports = {

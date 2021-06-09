@@ -18,7 +18,7 @@ class Upload {
       )
       .writeAsync(pathFile);
   }
-  async saveAvatarToStatic(idUser, pathFile, name, oldFile) {
+  async saveAvatarToStatic({ idUser, pathFile, name, oldFile }) {
     await this.transformAvatar(pathFile);
     const folderUserAvatar = path.join(this.AVATARS_OF_USERS, idUser);
     await createFolderIsNotExist(folderUserAvatar);
