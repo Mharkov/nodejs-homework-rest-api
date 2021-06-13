@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const { Schema } = mongoose;
+const gravatar = require('gravatar');
 const bcrypt = require('bcryptjs');
 const SALE_FACTOR = 6;
 
@@ -26,6 +27,17 @@ const userSchema = new Schema(
       default: 'starter',
     },
     token: {
+      type: String,
+      default: null,
+    },
+    avatar: {
+      type: String,
+      default: function () {
+        return gravatar.url(this.email, { s: 250 }, true);
+      },
+    },
+
+    userIdImg: {
       type: String,
       default: null,
     },
