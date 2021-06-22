@@ -1,6 +1,7 @@
 const Contacts = require('../model/contacts');
 const { HttpCode } = require('../helpers/constans');
 
+// @ GET /api/contacts
 const getAll = async (req, res, next) => {
   try {
     const userID = req.user.id;
@@ -18,6 +19,7 @@ const getAll = async (req, res, next) => {
   }
 };
 
+// @ GET /api/contacts/:contactId
 const getById = async (req, res, next) => {
   try {
     const userID = req.user.id;
@@ -44,6 +46,7 @@ const getById = async (req, res, next) => {
   }
 };
 
+// @ POST /api/contacts
 const create = async (req, res, next) => {
   try {
     const userID = req.user.id;
@@ -67,6 +70,7 @@ const create = async (req, res, next) => {
   }
 };
 
+// @ DELETE /api/contacts/:contactId
 const remove = async (req, res, next) => {
   try {
     const userID = req.user.id;
@@ -91,6 +95,7 @@ const remove = async (req, res, next) => {
   }
 };
 
+// @ (PUT & PATCH) /api/contacts/:contactId
 const update = async (req, res, next) => {
   try {
     const userID = req.user.id;
